@@ -7,3 +7,5 @@ https://www.geeksforgeeks.org/c-program-red-black-tree-insertion/ -- another int
 http://cplusplus.kurttest.com/index.html          ||
 http://cplusplus.kurttest.com/notes/              ||
 http://cpp.datastructures.net/source/ch09.html    -- Notes on Data Structures and Algorithms in C++
+
+https://github.com/kkruecke/redblack-cpp          -- Perfect implementations of RBTree
