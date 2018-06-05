@@ -1,42 +1,42 @@
 #ifndef RBTREE_HPP_
 #define RBTREE_HPP_
 
-template<typename T, typename D>
-RedBlackTree<T, D>::RedBlackTree( RedBlackTree *b)
+template<typename Key, typename Dat>
+RBTree<Key, Dat>::RBTree( RBTree *b)
 {
-    m_val      = b->m_val;
-    m_dat      = b->m_dat;
-    m_left     = b->m_left;
-    m_right    = b->m_right;
-    m_color    = red;
+    t_val      = b->t_val;
+    t_dat      = b->t_dat;
+    t_left     = b->t_left;
+    t_right    = b->t_right;
+    t_color    = red;
 }
 
-template<typename T, typename D>
-void RedBlackTree<T, D>::copy(RedBlackTree *x)
+template<typename Key, typename Dat>
+void RBTree<Key, Dat>::copy(RBTree *x)
 {
-    m_val     = x->m_val;
-    m_dat     = x->m_dat;
-    m_left    = x->m_left;
-    m_right   = x->m_right;
-    m_color   = x->m_color;
+    t_val     = x->t_val;
+    t_dat     = x->t_dat;
+    t_left    = x->t_left;
+    t_right   = x->t_right;
+    t_color   = x->t_color;
 
     // UPDATE 2006-01-28
     // node pointed to by 'x' is no longer needed, delete it.
     // first make sure the delete won't descend into other nodes
-    x->m_left  = 0;
-    x->m_right = 0;
+    x->t_left  = 0;
+    x->t_right = 0;
     delete x;
 }
 
-template<typename T, typename D>
-RedBlackTree<T, D>* RedBlackTree<T, D>::RBinsertLeft(T k, D d, int sw)
+template<typename Key, typename Dat>
+RBTree<Key, Dat>* RBTree<Key, Dat>::RBinsertLeft(Key k, Dat d, int sw)
 {
-    RedBlackTree *l;
-    RedBlackTree *b;
+    RBTree *l;
+    RBTree *b;
 
-    l = m_left;
+    l = t_left;
     if (l == 0) {
-        m_left = b = new RedBlackTree(k, d);
+        t_left = b = new RBTree(k, d);
     }
     else {
         b = l->RBinsert(k, d, sw);
@@ -44,15 +44,15 @@ RedBlackTree<T, D>* RedBlackTree<T, D>::RBinsertLeft(T k, D d, int sw)
     return b;
 }
 
-template<typename T, typename D>
-RedBlackTree<T, D>* RedBlackTree<T, D>::RBinsertRight(T k, D d, int sw)
+template<typename Key, typename Dat>
+RBTree<Key, Dat>* RBTree<Key, Dat>::RBinsertRight(Key k, Dat d, int sw)
 {
-    RedBlackTree *r;
-    RedBlackTree *b;
+    RBTree *r;
+    RBTree *b;
 
-    r = m_right;
+    r = t_right;
     if (r == 0) {
-        m_right = b = new RedBlackTree(k,d);
+        t_right = b = new RBTree(k,d);
     }
     else {
         b = r->RBinsert(k, d, sw);
@@ -60,37 +60,233 @@ RedBlackTree<T, D>* RedBlackTree<T, D>::RBinsertRight(T k, D d, int sw)
     return b;
 }
 
-template<typename T, typename D>
-RedBlackTree<T, D>* RedBlackTree<T, D>::rotLeft()
+template<typename Key, typename Dat>
+RBTree<Key, Dat>* RBTree<Key, Dat>::rotLeft()
 {
-    RedBlackTree *x;
-    RedBlackTree *me;
+    RBTree *x;
+    RBTree *me;
 
-    if (m_right == 0) return 0;
+    if (t_right == 0) return 0;
     // make the changes in a copy of current node __self
     // on return, the caller will copy in 'me' to current node
-    me          = new RedBlackTree(this);
-    x           = me->m_right;
-    me->m_right = x->m_left;
-    x->m_left   = me;
+    me          = new RBTree(this);
+    x           = me->t_right;
+    me->t_right = x->t_left;
+    x->t_left   = me;
     return   x;
 }
 
-template<typename T, typename D>
-RedBlackTree<T, D>* RedBlackTree<T, D>::rotRight()
+template<typename Key, typename Dat>
+RBTree<Key, Dat>* RBTree<Key, Dat>::rotRight()
 {
-    RedBlackTree *x;
-    RedBlackTree *me;
+    RBTree *x;
+    RBTree *me;
 
-    if (m_left == 0) return 0;
+    if (t_left == 0) return 0;
 
     // make the changes in a copy of current node __self
     // on return, the caller will copy in 'me' to current node
-    me          = new RedBlackTree(this);
-    x           = me->m_left;
-    me->m_left  = x->m_right;
-    x->m_right  = me;
+    me          = new RBTree(this);
+    x           = me->t_left;
+    me->t_left  = x->t_right;
+    x->t_right  = me;
     return x;
+}
+
+template<typename Key, typename Dat>
+RBTree<Key, Dat>::RBTree()
+{
+    t_val      = 0;
+    t_dat      = 0;
+    t_left     = 0;
+    t_right    = 0;
+    t_color    = red;
+}
+
+template<typename Key, typename Dat>
+RBTree<Key, Dat>::RBTree(Key k, Dat d)
+{
+    t_val      = k;
+    t_dat      = d;
+    t_left     = 0;
+    t_right    = 0;
+    t_color    = red;
+}
+
+template<typename Key, typename Dat>
+RBTree<Key, Dat>::~RBTree()
+{
+    if (t_left != 0) {
+        delete t_left;
+    }
+    if (t_right != 0) {
+        delete t_right;
+    }
+}
+
+template<typename Key, typename Dat>
+string RBTree<Key, Dat>::str() const
+{
+    stringstream s(stringstream::out);
+    // t_val (type Key) must have the proper ostream insertion operator
+    // or this implementation won't work
+    s << "[" << t_val << "," << t_color << "]";
+    return s.str();
+}
+
+template<typename Key, typename Dat>
+const RBTree<Key, Dat>* RBTree<Key, Dat>::find(const Key &key) const {
+    const RBTree *result = 0;
+    if (key == t_val) {
+        result = this;
+    }
+    else if (key < t_val) {
+        if (t_left != 0) {
+            result = t_left->find(key);
+        }
+    }
+    else {
+        if (t_right != 0) {
+            result = t_right->find(key);
+        }
+    }
+    return result;
+}
+/*
+template<typename Key, typename Dat>
+void RBTree<Key, Dat>::inorder(NodeVisitor<Key, Dat> *visitor,int depth) const
+{
+    if (t_left != 0) {
+        t_left->inorder(visitor,depth+1);
+    }
+    visitor->visit(this,depth);
+    if (t_right != 0) {
+        t_right->inorder(visitor,depth+1);
+    }
+}
+*/
+template<typename Key, typename Dat>
+void RBTree<Key, Dat>::BFS() const
+{
+        vector<const RBTree*> kolejka;
+        const RBTree *v;  // wskaznik na aktualny element ktoey wypisujemy
+        v = this;
+
+        kolejka.push_back(v);                           // dodajemy pierwszy element do kolejki
+        while( !kolejka.empty() )                       // dpoki kolejka sie nie oprozni
+        {
+            v = kolejka.front();                        // pobieramy element z poczatku
+            cout << v->t_val << colorName[v->t_color] << ": " << v->t_dat;   // wyswietlamy go
+
+            cout << "\tkolejka: ";
+            for(int i = 0; i < kolejka.size(); ++i)
+                cout << kolejka[i]->t_val<<' ';
+            cout << endl;
+
+            if( v->t_left != 0)                         // wpisujemy do kolejki prawe i lewe podrzewo, jesli takowe istnieja
+                kolejka.push_back(v->t_left);
+
+            if( v->t_right != 0 )
+                kolejka.push_back(v->t_right);
+
+            kolejka.erase(kolejka.begin());             // usuwamy z kolejki pierwszy, wypisany wczesniej element
+        }
+}
+
+template<typename Key, typename Dat>
+RBTree<Key, Dat>* RBTree<Key, Dat>::RBinsert(Key k, Dat d,int sw)
+{
+    RBTree *b = 0;
+    RBTree *x;
+    RBTree *l;
+    RBTree *ll;
+    RBTree *r;
+    RBTree *rr;
+
+    // if current node is a 4 node, split it by flipping its colors
+    // if both children of this node are red, change this one to red
+    // and the children to black
+    l = t_left;
+    r = t_right;
+    if ((l != 0)&&(l->t_color==red)&&(r != 0)&&(r->t_color==red)) {
+        t_color = red;
+        l->t_color = black;
+        r->t_color = black;
+    }
+
+    // go left or right depending on key relationship
+    if (k < t_val) {
+        // recursively insert
+       b = RBinsertLeft(k, d, 0);
+
+        // on the way back up check if a rotation is needed
+        // if search path has two red links with same orientation
+        // do a single rotation and flip the color bits
+        l = t_left;
+        if ((t_color == red)&&(l != 0)&&(l->t_color == red)&&(sw == 1)) {
+            x = rotRight();
+            if (x != 0) {
+                // copy returned node to 'this'
+                copy(x);
+            }
+        }
+
+        // flip the color bits
+        l = t_left;
+        if (l != 0) {
+            ll = l->t_left;
+            if (ll != 0) {
+                if ((l->t_color == red)&&(ll->t_color == red)) {
+                    x = rotRight();
+                    if (x != 0) {
+                        copy(x);
+                    }
+                    t_color = black;
+                    r = t_right;
+                    if (r != 0) {
+                       r->t_color = red;
+                    }
+                }
+            }
+        }
+    }
+    else {
+        b = RBinsertRight(k, d, 1);
+
+        // on the way back up check if a rotation is needed
+        // if search path has two red links with same orientation
+        // do a single rotation and flip the color bits
+        r = t_right;
+        if ((t_color == red)&&(r != 0)&&(r->t_color == red)&&(sw == 0)) {
+            x = rotLeft();
+            if (x != 0) {
+                // copy returned node to 'this'
+                copy(x);
+            }
+        }
+
+        // flip the color bits
+        r = t_right;
+        if (r != 0) {
+            rr = r->t_right;
+            if (rr != 0) {
+               if ((r->t_color == red)&&(rr->t_color == red)) {
+                   x = rotLeft();
+                   if (x != 0) {
+                       // copy returned node to 'this'
+                        copy(x);
+                    }
+                    t_color = black;
+                    l = t_left;
+                    if (l != 0) {
+                       l->t_color = red;
+                    }
+                }
+            }
+        }
+    }
+
+    return b;
 }
 
 #endif // RBTREE_HPP_

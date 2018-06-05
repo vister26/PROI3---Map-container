@@ -1,5 +1,5 @@
 #include "rbtree.h"
-
+#include "dict.h"
 
 // ==================================
 // test program
@@ -7,10 +7,9 @@
 int main(int argc,char *argv[]) {
     int nodelist[] = {8,5,4,7,10,9,17,3,6};
     string datalist[] = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
-    NodeVisitor<int, string> *v;
 
     // insert all the data into the tree
-    RedBlackTree<int, string> *root = new RedBlackTree<int, string>(1,"z");
+    RBTree<int, string> *root = new RBTree<int, string>(1,"z");
 
     // need to do an ugly calculation to figure out length of the nodelist array
     // if i used a collection object instead of an array, then I couldn't have
@@ -19,30 +18,19 @@ int main(int argc,char *argv[]) {
         root->insert(nodelist[i], datalist[i]);
     }
 
-    // anonymous class implementing the NodeVisitor interface
-    v = new IntNodeVisitor;
-
-    // print the header
-    //cout << "    = ";
-    // visit all the nodes in order
-    //root->inorder(v,0);
-    //root->m_left->m_right->m_val
-    //root->m_right->m_left
-    //root->m_right->m_right->m_left->m_val
     cout << endl;
-    root->BFS(v,0);
+    root->BFS();
     // print a newline
     cout << endl;
 
-
+    Dict<int,int> dict;
 
     // find the specified element and print its value
-    const RedBlackTree<int, string> *x = root->find(10);
+    const RBTree<int, string> *x = root->find(10);
     cout << x->str() << endl;
 
     // no garbage collection, need to explicitly delete
     delete root; // will recursively delete all the nodes
-    delete v;
 }
 
 
