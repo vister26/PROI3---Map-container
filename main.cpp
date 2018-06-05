@@ -1,5 +1,5 @@
 #include "rbtree.h"
-
+#include "dict.h"
 
 // ==================================
 // test program
@@ -10,7 +10,7 @@ int main(int argc,char *argv[]) {
     NodeVisitor<int, string> *v;
 
     // insert all the data into the tree
-    RedBlackTree<int, string> *root = new RedBlackTree<int, string>(1,"z");
+    RBTree<int, string> *root = new RBTree<int, string>(1,"z");
 
     // need to do an ugly calculation to figure out length of the nodelist array
     // if i used a collection object instead of an array, then I couldn't have
@@ -34,10 +34,10 @@ int main(int argc,char *argv[]) {
     // print a newline
     cout << endl;
 
-
+    Dict<int,int> dict;
 
     // find the specified element and print its value
-    const RedBlackTree<int, string> *x = root->find(10);
+    const RBTree<int, string> *x = root->find(10);
     cout << x->str() << endl;
 
     // no garbage collection, need to explicitly delete
