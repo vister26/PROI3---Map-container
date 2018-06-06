@@ -10,7 +10,6 @@ int main(int argc,char *argv[]) {
 
     // insert all the data into the tree
     RBTree<string, int> *root = new RBTree<string, int>("z", 1);
-
     // need to do an ugly calculation to figure out length of the nodelist array
     // if i used a collection object instead of an array, then I couldn't have
     // done static initialization. so its a tradeoff
@@ -20,6 +19,7 @@ int main(int argc,char *argv[]) {
 
     cout << endl;
     root->BFS();
+    root->begin();
     // print a newline
     cout << endl;
 

@@ -2,14 +2,52 @@
 #define RBTREE_HPP_
 
 template<typename Key, typename Dat>
+RBTree<Key, Dat>::RBTree()
+{
+    t_val      = 0;
+    t_dat      = 0;
+    if( !t_root )
+        t_root = this;
+    t_left     = 0;
+    t_right    = 0;
+    t_color    = red;
+}
+
+template<typename Key, typename Dat>
+RBTree<Key, Dat>::RBTree(Key k, Dat d)
+{
+    t_val      = k;
+    t_dat      = d;
+    if( !t_root )
+        t_root = this;
+    t_left     = 0;
+    t_right    = 0;
+    t_color    = red;
+}
+
+template<typename Key, typename Dat>
 RBTree<Key, Dat>::RBTree( RBTree *b)
 {
     t_val      = b->t_val;
     t_dat      = b->t_dat;
+    // dodac tutaj root (?)
     t_left     = b->t_left;
     t_right    = b->t_right;
     t_color    = red;
 }
+
+
+template<typename Key, typename Dat>
+RBTree<Key, Dat>::~RBTree()
+{
+    if (t_left != 0) {
+        delete t_left;
+    }
+    if (t_right != 0) {
+        delete t_right;
+    }
+}
+
 
 template<typename Key, typename Dat>
 void RBTree<Key, Dat>::copy(RBTree *x)
@@ -20,7 +58,6 @@ void RBTree<Key, Dat>::copy(RBTree *x)
     t_right   = x->t_right;
     t_color   = x->t_color;
 
-    // UPDATE 2006-01-28
     // node pointed to by 'x' is no longer needed, delete it.
     // first make sure the delete won't descend into other nodes
     x->t_left  = 0;
@@ -94,37 +131,6 @@ RBTree<Key, Dat>* RBTree<Key, Dat>::rotRight()
 }
 
 template<typename Key, typename Dat>
-RBTree<Key, Dat>::RBTree()
-{
-    t_val      = 0;
-    t_dat      = 0;
-    t_left     = 0;
-    t_right    = 0;
-    t_color    = red;
-}
-
-template<typename Key, typename Dat>
-RBTree<Key, Dat>::RBTree(Key k, Dat d)
-{
-    t_val      = k;
-    t_dat      = d;
-    t_left     = 0;
-    t_right    = 0;
-    t_color    = red;
-}
-
-template<typename Key, typename Dat>
-RBTree<Key, Dat>::~RBTree()
-{
-    if (t_left != 0) {
-        delete t_left;
-    }
-    if (t_right != 0) {
-        delete t_right;
-    }
-}
-
-template<typename Key, typename Dat>
 string RBTree<Key, Dat>::str() const
 {
     stringstream s(stringstream::out);
@@ -192,6 +198,15 @@ void RBTree<Key, Dat>::BFS() const
             kolejka.erase(kolejka.begin());             // usuwamy z kolejki pierwszy, wypisany wczesniej element
         }
 }
+
+template<typename Key, typename Dat>
+
+RBTree<Key, Dat>* RBTree<Key, Dat>::insert(Key k, Dat d) {
+        RBTree *b;
+        b = RBinsert(k, d, 0);
+        t_color = black;
+        return b;
+    }
 
 template<typename Key, typename Dat>
 RBTree<Key, Dat>* RBTree<Key, Dat>::RBinsert(Key k, Dat d,int sw)
