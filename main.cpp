@@ -5,11 +5,11 @@
 // test program
 // ==================================
 int main(int argc,char *argv[]) {
-    int nodelist[] = {8,5,4,7,10,9,17,3,6};
-    string datalist[] = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
+    int datalist[] = {8,5,4,7,10,9,17,3,6};
+    string nodelist[] = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
 
     // insert all the data into the tree
-    RBTree<int, string> *root = new RBTree<int, string>(1,"z");
+    RBTree<string, int> *root = new RBTree<string, int>("z", 1);
 
     // need to do an ugly calculation to figure out length of the nodelist array
     // if i used a collection object instead of an array, then I couldn't have
@@ -23,10 +23,10 @@ int main(int argc,char *argv[]) {
     // print a newline
     cout << endl;
 
-    Dict<int,int> dict;
+    //Dict<int,int> dict;
 
     // find the specified element and print its value
-    const RBTree<int, string> *x = root->find(10);
+    const RBTree<string, int> *x = root->find("a");
     cout << x->str() << endl;
 
     // no garbage collection, need to explicitly delete
