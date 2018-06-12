@@ -5,6 +5,8 @@
 // test program
 // ==================================
 int main(int argc,char *argv[]) {
+
+/*
     int datalist[] = {8,5,4,7,10,9,17,3,6};
     string nodelist[] = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
 
@@ -19,11 +21,9 @@ int main(int argc,char *argv[]) {
 
     cout << endl;
     root->BFS();
-    root->begin();
+    //root->begin();
     // print a newline
     cout << endl;
-
-    //Dict<int,int> dict;
 
     // find the specified element and print its value
     const RBTree<string, int> *x = root->find("a");
@@ -31,6 +31,37 @@ int main(int argc,char *argv[]) {
 
     // no garbage collection, need to explicitly delete
     delete root; // will recursively delete all the nodes
+
+*/
+    vector<int> datalist = {8,5,4,7,10,9,17,3,6,22};
+    vector<std::string> keylist = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
+
+    Dict<std::string, int> *dict = new Dict<std::string, int>("z", 1);
+    Dict<std::string, int>::const_iterator iter;
+
+    dict->insert(keylist, datalist);
+    dict->displayDict();
+
+    for(iter = dict->begin(); iter <= dict->end(); iter = dict->next())
+        cout << dict->first() << '\t';
+
+    dict->erase(dict->find("g"));
+    dict->erase(dict->find("c"));
+    dict->erase(dict->find("h"));
+    dict->erase(dict->find("j"));
+    dict->erase(dict->find("e"));
+    dict->erase(dict->find("a"));
+    dict->erase(dict->find("b"));
+
+    cout << endl << endl;
+    dict->displayDict();
+    dict->clear();
+    dict = new Dict<std::string, int>("z", 1);
+    cout << endl << endl;
+    dict->insert("b", 1);
+    dict->insert("b", 2);
+    dict->displayDict();
+
 }
 
 

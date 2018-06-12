@@ -6,20 +6,16 @@ RBTree<Key, Dat>::RBTree()
 {
     t_val      = 0;
     t_dat      = 0;
-    if( !t_root )
-        t_root = this;
     t_left     = 0;
     t_right    = 0;
     t_color    = red;
 }
 
 template<typename Key, typename Dat>
-RBTree<Key, Dat>::RBTree(Key k, Dat d)
+RBTree<Key, Dat>::RBTree(const Key& k, const Dat& d)
 {
     t_val      = k;
     t_dat      = d;
-    if( !t_root )
-        t_root = this;
     t_left     = 0;
     t_right    = 0;
     t_color    = red;
@@ -30,7 +26,6 @@ RBTree<Key, Dat>::RBTree( RBTree *b)
 {
     t_val      = b->t_val;
     t_dat      = b->t_dat;
-    // dodac tutaj root (?)
     t_left     = b->t_left;
     t_right    = b->t_right;
     t_color    = red;
@@ -174,33 +169,47 @@ void RBTree<Key, Dat>::inorder(NodeVisitor<Key, Dat> *visitor,int depth) const
 template<typename Key, typename Dat>
 void RBTree<Key, Dat>::BFS() const
 {
-        vector<const RBTree*> kolejka;
-        const RBTree *v;  // wskaznik na aktualny element ktoey wypisujemy
-        v = this;
 
-        kolejka.push_back(v);                           // dodajemy pierwszy element do kolejki
-        while( !kolejka.empty() )                       // dpoki kolejka sie nie oprozni
-        {
-            v = kolejka.front();                        // pobieramy element z poczatku
-            cout << v->t_val << colorName[v->t_color] << ": " << v->t_dat;   // wyswietlamy go
+        vector<const RBTree*> lista;
 
+        lista = this->createList();
+        while(!lista.empty()){
+            cout << lista.front()->t_val << colorName[lista.front()->t_color] << ": " << lista.front()->t_dat;   // wyswietlamy go
             cout << "\tkolejka: ";
-            for(int i = 0; i < kolejka.size(); ++i)
-                cout << kolejka[i]->t_val<<' ';
+            for(unsigned i = 0; i < lista.size(); ++i)
+                cout << lista[i]->t_val<<' ';
             cout << endl;
 
-            if( v->t_left != 0)                         // wpisujemy do kolejki prawe i lewe podrzewo, jesli takowe istnieja
-                kolejka.push_back(v->t_left);
-
-            if( v->t_right != 0 )
-                kolejka.push_back(v->t_right);
-
-            kolejka.erase(kolejka.begin());             // usuwamy z kolejki pierwszy, wypisany wczesniej element
+            lista.erase(lista.begin());
         }
 }
 
 template<typename Key, typename Dat>
+std::vector<const RBTree<Key, Dat>*> RBTree<Key, Dat>::createList() const
+{
+    vector<const RBTree*> kolejka;
+    vector<const RBTree*> lista;
+    const RBTree *v;  // wskaznik na aktualny element ktoey wypisujemy
+    v = this;
 
+    kolejka.push_back(v);                           // dodajemy pierwszy element do kolejki
+    while( !kolejka.empty() )                       // dpoki kolejka sie nie oprozni
+    {
+        v = kolejka.front();                        // dodajemy do listy element z poczatku
+        lista.push_back(v);
+
+        if( v->t_left != 0)                         // wpisujemy do kolejki prawe i lewe podrzewo, jesli takowe istnieja
+            kolejka.push_back(v->t_left);
+
+        if( v->t_right != 0 )
+            kolejka.push_back(v->t_right);
+
+        kolejka.erase(kolejka.begin());             // usuwamy z kolejki pierwszy, wypisany wczesniej element
+    }
+    return lista;
+}
+
+template<typename Key, typename Dat>
 RBTree<Key, Dat>* RBTree<Key, Dat>::insert(Key k, Dat d) {
         RBTree *b;
         b = RBinsert(k, d, 0);

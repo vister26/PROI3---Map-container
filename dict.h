@@ -1,39 +1,67 @@
 #ifndef DICT_H_
 #define DICT_H_
 
-#include <memory>
-#include <functional>
-#include <utility>
-#include <iterator>
 #include "rbtree.h"
 
 template<
     typename Key,
-    typename Dat,
-    typename Compare,
-    typename Allocator
+    typename Dat
 > class Dict;
 
 template<
     typename Key,
-    typename Dat,
-    typename Compare = std::less<Key>,
-    typename Allocator = std::allocator<std::pair<const Key, Dat> >
+    typename Dat
 > class Dict
 {
 private:
-    RBTree<Key, Dat> *root;
+    typedef  RBTree<Key, Dat> Tree;
+    Tree *root = NULL;
+    std::vector<const Tree*> iteratorlist;
+    unsigned iteratorCurPos;
 
 public:
-    //typedef typename Dict<const Key, Dat>::iterator		Iterator;
-    typedef typename std::pair<const Key, Dat>		value_type;
+    typedef typename Tree::iterator iterator;
+    typedef typename Tree::const_iterator const_iterator;
 
-    explicit Dict(const Compare& comp = Compare(), const Allocator& alloc = Allocator());
-    explicit Dict(const Allocator& alloc);
+    const_iterator begin() {
+        iteratorlist.clear();
+        iteratorlist = root->createList();
+        iteratorCurPos = 0;
+        //cout << "valbeg: " <<iteratorlist[0]->val() << endl;
+        return iteratorlist.front();
+    }
+    const_iterator end(){
+        //cout << "valend: " <<iteratorlist.back()->val() << endl;
+        return iteratorlist.back();
+    }
+    const_iterator next(){
+        ++iteratorCurPos;
+        return iteratorlist[iteratorCurPos];
+    }
+    const_iterator prev(){
+        --iteratorCurPos;
+        return iteratorlist[iteratorCurPos];
+    }
+
+    Key first() const{
+        return iteratorlist[iteratorCurPos]->val();
+    }
+
+    Dat second() const{
+        return iteratorlist[iteratorCurPos]->dat();
+    }
+
+    explicit Dict();
+    Dict(const Key& k, const Dat& d );
     Dict(const Dict& x);
-    Dict(const Dict& x, const Allocator& alloc);
 
-    std::pair<value_type*, bool> insert( const value_type& value );
+    std::pair<iterator, bool> insert(const std::vector<Key> keylist, const std::vector<Dat> datalist);
+    std::pair<iterator, bool> insert(const Key& k, const Dat& d);
+    const_iterator find(const Key& k);
+    void erase(const_iterator pos);
+    void displayDict();
+    const Dat& at(const Key& k) const;
+    void clear();
 };
 
 #include "dict.hpp"

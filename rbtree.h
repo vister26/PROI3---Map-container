@@ -11,7 +11,9 @@ using namespace std;
 // requires forward declaration to resolve cycle between NodeVisitor and RBTree
 template<typename Key, typename Dat> class RBTree;
 
-template <typename Key, typename Dat> RBTree* Global<Key, Dat>::pVar = new RBTree;
+//template <typename Key, typename Dat> RBTree* Global<Key, Dat>::pVar = new RBTree;
+//template<typename Key, typename Dat>
+//RBTree<Key, Dat> *t_root = NULL;
 
 // globalny wskaznik na korzen drzewa
 
@@ -39,7 +41,7 @@ private:
     int t_color;
     Key t_val;
     Dat t_dat;
-    RBTree *t_root;
+    //RBTree *t_root;
     RBTree *t_left;
     RBTree *t_right;
 
@@ -60,13 +62,13 @@ private:
 public:
     // construct with an initial value
     RBTree();
-    RBTree(Key k, Dat d);
+    RBTree(const Key& k, const Dat& d);
 
     ~RBTree();
 
-    typedef RBTree *iterator;
-    typedef const RBTree *const_iterator;
-    iterator begin() { return t_root; }
+    typedef RBTree* iterator;
+    typedef const RBTree* const_iterator;
+    //iterator begin() { return t_root; }
 
     // return a string representation
     string str() const;
@@ -90,6 +92,8 @@ public:
     // and it returns a pointer to a const node that the caller
     // cannot change, only inspect
     const RBTree *find(const Key &key) const;
+
+    std::vector<const RBTree*> createList() const;
 
     // 'const' means this method doesn't change the object state
     // and the visitor is not allowed to change the object state.
